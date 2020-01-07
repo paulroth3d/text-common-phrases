@@ -14,6 +14,10 @@ const { Runner } = require('./runner');
 //-- path to the happy birthday file
 const HAPPY_BIRTHDAY_PATH = './testAssets/HappyBirthday.txt';
 
+const EXAMPLE_NUMBERED_PHRASES = [-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => {
+  return [`${num}`, num];
+});
+
 describe('Runner', () => {
   test('Runner can say hello', (done) => {
     assert.equal('1.0', Runner.getVersion(), 'Version should be set');
@@ -60,6 +64,67 @@ describe('Runner', () => {
 
     done();
   });
+
+  test('phrase table returns phrases if phrases are found', (done) => {
+    const EXAMPLE_PHRASE_STR = '{"Happy Birthday":1,"Birthday to":3,'
+      + '"to You\\nHappy":2,"You\\nHappy Birthday":2,"Birthday Dear":1,'
+      + '"Dear name\\nHappy":1,"name\\nHappy Birthday":1,"to You.":1}';
+    const EXAMPLE_PHRASES = Runner.getObjectEntries(
+      JSON.parse(EXAMPLE_PHRASE_STR)
+    );
+
+    const phraseTable = Runner.printPhraseTable(EXAMPLE_PHRASES);
+
+    assert.isNotEmpty(phraseTable);
+
+    console.log(phraseTable);
+
+    done();
+  });
+
+  test('min count filters phrases less than the count', (done) => {
+    const filteredPhrases = Runner.filterMinCount(EXAMPLE_NUMBERED_PHRASES, 2);
+
+    debugger;
+
+    assert.isNotNull(filteredPhrases);
+    assert.isArray(filteredPhrases);
+    assert.equal(filteredPhrases.length, 9);
+    assert.sameDeepMembers(filteredPhrases, EXAMPLE_NUMBERED_PHRASES.slice(3), 'something');
+
+    done();
+  });
+
+  test('min count does not filter if min was not provided', (done) => {
+    const filteredPhrases = Runner.filterMinCount(EXAMPLE_NUMBERED_PHRASES, undefined);
+
+    assert.isNotNull(filteredPhrases);
+    assert.isArray(filteredPhrases);
+    assert.equal(filteredPhrases.length, 12);
+    assert.sameDeepMembers(filteredPhrases, EXAMPLE_NUMBERED_PHRASES);
+    done();
+  });
+
+  test('max count filters phrases more than the count', (done) => {
+    const filteredPhrases = Runner.filterMaxCount(EXAMPLE_NUMBERED_PHRASES, 2);
+
+    assert.isNotNull(filteredPhrases);
+    assert.isArray(filteredPhrases);
+    assert.equal(filteredPhrases.length, 4);
+    assert.sameDeepMembers(filteredPhrases, EXAMPLE_NUMBERED_PHRASES.slice(0, 4));
+
+    done();
+  });
+
+  test('max count does not filter if max was not provided', (done) => {
+    const filteredPhrases = Runner.filterMaxCount(EXAMPLE_NUMBERED_PHRASES, undefined);
+
+    assert.isNotNull(filteredPhrases);
+    assert.isArray(filteredPhrases);
+    assert.equal(filteredPhrases.length, 12);
+    assert.sameDeepMembers(filteredPhrases, EXAMPLE_NUMBERED_PHRASES);
+    done();
+  });
 });
 
 describe('command line arguments', () => {
@@ -70,7 +135,6 @@ describe('command line arguments', () => {
   });
 
   test('path if specified by command line arguments', (done) => {
-    debugger;
     const PASSED_FILE_PATH = './test.js';
     const commandLineArguments = Runner.getCommandArguments(
       ['-f', PASSED_FILE_PATH]
@@ -82,7 +146,6 @@ describe('command line arguments', () => {
   });
 
   test('path if not specified by command line arguments', (done) => {
-    debugger;
     const commandLineArguments = Runner.getCommandArguments();
     const commandLinePath = commandLineArguments.file;
     assert.isUndefined(commandLinePath);
