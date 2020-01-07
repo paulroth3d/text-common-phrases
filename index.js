@@ -4,4 +4,4 @@
 
 const { Runner } = require('./runner');
 
-console.log(`Version: ${Runner.getVersion()}`); // eslint-disable-line no-console
+Runner.run();

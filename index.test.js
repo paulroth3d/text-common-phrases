@@ -14,4 +14,11 @@ describe('Runner', () => {
     assert.equal('1.0', Runner.getVersion(), 'Version should be set');
     done();
   });
+
+  test('data file is loaded', (done) => {
+    Runner.loadData()
+      .then((fileContents) => {
+        assert.isNotNull(fileContents, 'file contents should not be null');
+      });
+  });
 });

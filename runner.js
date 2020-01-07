@@ -15,6 +15,17 @@ class Runner {
   static getVersion() {
     return '1.0';
   }
+
+  /**
+   * Runs the execution
+   */
+  static async run() {
+    // eslint-disable-next-line no-console
+    this.version = Runner.getVersion();
+
+    // eslint-disable-next-line no-console
+    console.log(`version: ${Runner.getVersion()}`);
+  }
 }
 
 module.exports = {
