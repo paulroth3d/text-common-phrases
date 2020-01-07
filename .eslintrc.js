@@ -5,6 +5,10 @@ module.exports = {
     es6: true,
     jest: true
   },
+  ignorePatterns: [
+    '.eslint*',
+    '*.config.js'
+  ],
   extends: [
     'airbnb-base',
   ],
@@ -16,7 +20,6 @@ module.exports = {
     ecmaVersion: 2018,
   },
   rules: {
-    "no-console": "off",
-    "no-debugger": "off"
+    "comma-dangle": "off"
   },
 };

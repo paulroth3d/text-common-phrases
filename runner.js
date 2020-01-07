@@ -8,12 +8,10 @@ const fs = require('fs-extra');
 /* eslint-enable */
 
 class Runner {
-  /** test method */
-  static sayHello() {
-    console.log('Hello!');
-  }
-
-  /** get the version */
+  /**
+   * get the version
+   * @returns {string}
+   */
   static getVersion() {
     return '1.0';
   }

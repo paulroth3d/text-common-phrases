@@ -7,11 +7,12 @@
     "test": "node node_modules/jest/bin/jest.js",
     "test:watch": "node node_modules/jest/bin/jest.js --watch",
     "start": "node index.js",
+    "lint": "node node_modules/eslint-watch/bin/esw",
+    "lint:watch": "node node_modules/eslint-watch/bin/esw -w --changed",
     "debug": "node --inspect-brk index.js",
     "jest": "node node_modules/jest/bin/jest.js",
     "eslint:old": "node node_modules/eslint/bin/eslint.js",
-    "eslint": "node node_modules/eslint-watch/bin/esw",
-    "eslint:watch": "node node_modules/eslint-watch/bin/esw -w --changed"
+    "eslint": "node node_modules/eslint-watch/bin/esw"
   },
   "keywords": [],
   "author": "",
