@@ -2,6 +2,6 @@
  * Finds the common phrases in a set of data
  */
 
-const runner = require('./runner');
+const { Runner } = require('./runner');
 
-runner.sayHello();
+Runner.sayHello();
