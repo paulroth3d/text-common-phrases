@@ -12,6 +12,11 @@ class Runner {
   static sayHello() {
     console.log('Hello!');
   }
+
+  /** get the version */
+  static getVersion() {
+    return '1.0';
+  }
 }
 
 module.exports = {
