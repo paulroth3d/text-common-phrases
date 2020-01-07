@@ -31,4 +31,10 @@ describe('Runner', () => {
         }
       );
   });
+
+  test('await works in tests', async (done) => {
+    const fileContents = await Runner.loadFileContents('./testAssets/HappyBirthday.txt');
+    assert.isNotEmpty(fileContents, 'File contents should not be empty');
+    done();
+  });
 });
