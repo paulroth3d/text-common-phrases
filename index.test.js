@@ -16,6 +16,8 @@ const HAPPY_BIRTHDAY_PATH = './testAssets/HappyBirthday.txt';
 
 const EXAMPLE_NUMBERED_PHRASES = [-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => [`${num}`, num]);
 
+// const sandbox = sinon.sandbox.create();
+
 describe('Runner', () => {
   test('Runner can say hello', (done) => {
     assert.equal('1.0', Runner.getVersion(), 'Version should be set');
@@ -23,24 +25,8 @@ describe('Runner', () => {
   });
 
   test('LoadFile has contents', (done) => {
-    Runner.loadFileContents(HAPPY_BIRTHDAY_PATH)
-      .then(
-        (fileContents) => {
-          assert.isNotEmpty(fileContents, 'File contents should be found');
-          done();
-        }
-      )
-      .catch(
-        (err) => {
-          assert.isNull(err, `Error occurred while loading file contents: ${err.message}`);
-          done();
-        }
-      );
-  });
-
-  test('await works in tests', async (done) => {
-    const fileContents = await Runner.loadFileContents(HAPPY_BIRTHDAY_PATH);
-    assert.isNotEmpty(fileContents, 'File contents should not be empty');
+    const fileContents = Runner.loadFileContents(HAPPY_BIRTHDAY_PATH);
+    assert.isNotEmpty(fileContents, 'File contents should be found');
     done();
   });
 
@@ -163,6 +149,9 @@ describe('command line arguments', () => {
       delete commander.file;
     }
   });
+  afterEach(() => {
+    // sandbox.restore();
+  });
 
   test('path if specified by command line arguments', (done) => {
     const PASSED_FILE_PATH = './test.js';
@@ -196,4 +185,17 @@ describe('command line arguments', () => {
     done();
   });
   */
+});
+
+describe('Run program', () => {
+  beforeEach(() => {
+  });
+
+  test('table', (done) => {
+    done();
+  });
+
+  test('json', (done) => {
+    done();
+  });
 });

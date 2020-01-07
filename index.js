@@ -4,8 +4,12 @@
 
 const { Runner } = require('./runner');
 
-async function run() {
-  const tableStr = await Runner.run();
-  console.log(tableStr); // eslint-disable-line
-}
-run();
+Runner.run()
+  .then((tableStr) => {
+    // eslint-disable-next-line no-console
+    console.log(tableStr);
+  })
+  .catch((err) => {
+    // eslint-disable-next-line no-console
+    console.error(`an error occurred:${err.message}`);
+  });

@@ -22,7 +22,7 @@ describe('CLI-Table', () => {
       head: ['Position', 'Value']
     });
 
-    EXAMPLE_RESULTS.forEach(entry => {
+    EXAMPLE_RESULTS.forEach((entry) => {
       table.push(entry);
     });
 

@@ -18,7 +18,8 @@ commander
   .option('-n, --min <minCount>', 'phrases occurring >= min will be reported')
   .option('-x, --max <maxCount>', 'phrases occurring <= max will be reported')
   .option('-a, --asc', 'sorts in ascending order')
-  .option('-d, --desc', 'sorts in descending order (default)');
+  .option('-d, --desc', 'sorts in descending order (default)')
+  .option('-j, --json', 'returns results in JSON format');
 
 const DEFAULT_PATH = './data.txt';
 
@@ -58,34 +59,45 @@ class Runner {
 
   /**
    * Runs the execution
+   * @returns {Promise<string>}
    */
-  static async run() {
-    // eslint-disable-next-line no-console
-    this.version = Runner.getVersion();
+  static run() {
+    const resultPromise = new Promise((resolve, reject) => {
+      try {
+        const args = Runner.getCommandArguments();
 
-    // eslint-disable-next-line no-console
-    // console.log(`version: ${Runner.getVersion()}`);
+        const filePath = args.file || DEFAULT_PATH;
+        const fileContents = Runner.loadFileContents(filePath);
 
-    const args = Runner.getCommandArguments();
+        let phraseList = Runner.getCommonPhrases(fileContents);
 
-    const filePath = args.file || DEFAULT_PATH;
-    const fileContents = await Runner.loadFileContents(filePath);
+        //-- filter
+        phraseList = Runner.filterMinCount(phraseList, args.min);
+        phraseList = Runner.filterMaxCount(phraseList, args.max);
 
-    let phraseList = Runner.getCommonPhrases(fileContents);
+        const sortedList = phraseList.sort((left, right) => {
+          return right[1] - left[1];
+        });
 
-    //-- filter
-    phraseList = Runner.filterMinCount(phraseList, args.min);
-    phraseList = Runner.filterMaxCount(phraseList, args.max);
-
-    const tableStr = Runner.printPhraseTable(phraseList);
-    return tableStr;
+        let resultStr = '';
+        if (args.json) {
+          resultStr = Runner.printPhraseJSON(sortedList);
+        } else {
+          resultStr = Runner.printPhraseTable(sortedList);
+        }
+        resolve(resultStr);
+      } catch (err) {
+        reject(err);
+      }
+    });
+    return resultPromise;
   }
 
   //-- methods
 
   /**
    * Prints a table of the list of common phrases
-   * @param {array} commonPhrases - phrases as properties
+   * @param {array} commonPhrases - [phrase : count]]
    * @returns {string} - table to print to command line of the properties
    */
   static printPhraseTable(phraseList) {
@@ -93,15 +105,11 @@ class Runner {
       return '--no results--';
     }
 
-    const sortedList = phraseList.sort((left, right) => {
-      return right[1] - left[1];
-    });
-
     const table = new CliTable({
       head: ['Phrase', 'Weight']
     });
 
-    sortedList.forEach((phrase) => {
+    phraseList.forEach((phrase) => {
       table.push(phrase);
     });
 
@@ -109,9 +117,22 @@ class Runner {
   }
 
   /**
+   * Prints the results in JSON format
+   * @param {array} commonPhrases - phrases as json table
+   * @returns {string} - json printout of the results
+   */
+  static printPhraseJSON(phraseList) {
+    if (!phraseList) {
+      return '[]';
+    }
+
+    return JSON.stringify(phraseList, null, 2);
+  }
+
+  /**
    * Determines the contents of a file
    * @param {string} filePath - path to the file
-   * @returns {Promise<string>}
+   * @returns {string}}
    */
   static loadFileContents(filePath) {
     let targetPath = null;
@@ -122,7 +143,7 @@ class Runner {
     } else {
       targetPath = DEFAULT_PATH;
     }
-    return fs.readFile(targetPath, 'utf-8');
+    return fs.readFileSync(targetPath, 'utf-8');
   }
 
   /**
