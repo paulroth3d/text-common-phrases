@@ -26,6 +26,17 @@ class Runner {
     // eslint-disable-next-line no-console
     console.log(`version: ${Runner.getVersion()}`);
   }
+
+  //-- methods
+
+  /**
+   * Determines the contents of a file
+   * @param {string} filePath - path to the file
+   * @returns {Promise<string>}
+   */
+  static loadFileContents(filePath) {
+    return fs.readFile(filePath);
+  }
 }
 
 module.exports = {
