@@ -16,7 +16,9 @@ commander
   .version('1.0', '-v, --version', 'outout the current version')
   .option('-f, --file <filePath>', 'file to load')
   .option('-n, --min <minCount>', 'phrases occurring >= min will be reported')
-  .option('-x, --max <maxCount>', 'phrases occurring <= max will be reported');
+  .option('-x, --max <maxCount>', 'phrases occurring <= max will be reported')
+  .option('-a, --asc', 'sorts in ascending order')
+  .option('-d, --desc', 'sorts in descending order (default)');
 
 const DEFAULT_PATH = './data.txt';
 
@@ -76,8 +78,7 @@ class Runner {
     phraseList = Runner.filterMaxCount(phraseList, args.max);
 
     const tableStr = Runner.printPhraseTable(phraseList);
-
-    console.log(tableStr);
+    return tableStr;
   }
 
   //-- methods
@@ -97,7 +98,7 @@ class Runner {
     });
 
     const table = new CliTable({
-      header: ['Phrase', 'Weight']
+      head: ['Phrase', 'Weight']
     });
 
     sortedList.forEach((phrase) => {
@@ -145,7 +146,7 @@ class Runner {
     let results = phraseList;
     if (phraseList && min) {
       results = phraseList.filter(([phrase, num]) => { // eslint-disable-line
-        return num >= min;
+        return Number.isNaN(num) || num >= min;
       });
     }
     return results;
@@ -161,8 +162,25 @@ class Runner {
     let results = phraseList;
     if (phraseList && max) {
       results = phraseList.filter(([phrase, num]) => { // eslint-disable-line no-unused-vars
-        return num <= max;
+        return Number.isNaN(num) || num <= max;
       });
+    }
+    return results;
+  }
+
+  /**
+   * Sorts an array of results by the count
+   * @param {array} phraseList
+   * @param {boolean} isAscending
+   * @returns {array} phraseList in ascending or descending order
+   */
+  static sortPhrases(phraseList, isAscending) {
+    const ascendingSort = (a, b) => a[1] - b[1];
+    const descendingSort = (a, b) => b[1] - a[1];
+
+    let results = [];
+    if (phraseList) {
+      results = phraseList.sort(isAscending ? ascendingSort : descendingSort);
     }
     return results;
   }

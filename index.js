@@ -4,4 +4,8 @@
 
 const { Runner } = require('./runner');
 
-Runner.run();
+async function run() {
+  const tableStr = await Runner.run();
+  console.log(tableStr); // eslint-disable-line
+}
+run();

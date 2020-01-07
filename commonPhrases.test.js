@@ -23,7 +23,7 @@ describe('commonPhrases', () => {
     assert.isNotEmpty(phrases, 'should get phrases returned');
     assert.equal(typeof phrases['Happy Birthday'], 'number', 'Phrase Happy Birthday should be found');
 
-    console.log(JSON.stringify(phrases));
+    // console.log(JSON.stringify(phrases));
 
     done();
   });

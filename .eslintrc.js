@@ -21,6 +21,7 @@ module.exports = {
   },
   rules: {
     "comma-dangle": 'off',
-    "spaced-comment": 'off'
+    "spaced-comment": 'off',
+    "arrow-body-style": 'off'
   },
 };

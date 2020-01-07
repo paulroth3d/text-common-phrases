@@ -14,9 +14,7 @@ const { Runner } = require('./runner');
 //-- path to the happy birthday file
 const HAPPY_BIRTHDAY_PATH = './testAssets/HappyBirthday.txt';
 
-const EXAMPLE_NUMBERED_PHRASES = [-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => {
-  return [`${num}`, num];
-});
+const EXAMPLE_NUMBERED_PHRASES = [-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => [`${num}`, num]);
 
 describe('Runner', () => {
   test('Runner can say hello', (done) => {
@@ -77,15 +75,13 @@ describe('Runner', () => {
 
     assert.isNotEmpty(phraseTable);
 
-    console.log(phraseTable);
+    // console.log(phraseTable);
 
     done();
   });
 
   test('min count filters phrases less than the count', (done) => {
     const filteredPhrases = Runner.filterMinCount(EXAMPLE_NUMBERED_PHRASES, 2);
-
-    debugger;
 
     assert.isNotNull(filteredPhrases);
     assert.isArray(filteredPhrases);
@@ -123,6 +119,40 @@ describe('Runner', () => {
     assert.isArray(filteredPhrases);
     assert.equal(filteredPhrases.length, 12);
     assert.sameDeepMembers(filteredPhrases, EXAMPLE_NUMBERED_PHRASES);
+    done();
+  });
+
+  test('sort phrases in descending order', (done) => {
+    const phraseList = EXAMPLE_NUMBERED_PHRASES.reduce((collection, entry) => {
+      collection.push(entry);
+      return collection;
+    }, []);
+
+    //-- the items are sorted in ascending order
+    assert.sameMembers(phraseList[0], ['-1', -1]);
+
+    const sortedList = Runner.sortPhrases(phraseList, null);
+
+    assert.sameMembers(sortedList[0], ['10', 10]);
+
+    // console.log(`descending order:${JSON.stringify(sortedList)}`);
+
+    done();
+  });
+
+  test('sort phrases in ascending order', (done) => {
+    const phraseList = EXAMPLE_NUMBERED_PHRASES.reduce((collection, entry) => {
+      collection.unshift(entry);
+      return collection;
+    }, []);
+
+    //-- the items are sorted in ascending order
+    assert.sameMembers(phraseList[0], ['10', 10]);
+
+    const sortedList = Runner.sortPhrases(phraseList, true);
+
+    assert.sameMembers(sortedList[0], ['-1', -1]);
+
     done();
   });
 });
