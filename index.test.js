@@ -19,6 +19,7 @@ describe('Runner', () => {
     Runner.loadFileContents('./testAssets/HappyBirthday.txt')
       .then(
         (fileContents) => {
+          debugger; // eslint-disable-line
           assert.isNotEmpty(fileContents, 'File contents should be found');
           done();
         }

@@ -35,7 +35,7 @@ class Runner {
    * @returns {Promise<string>}
    */
   static loadFileContents(filePath) {
-    return fs.readFile(filePath);
+    return fs.readFile(filePath, 'utf-8');
   }
 }
 
