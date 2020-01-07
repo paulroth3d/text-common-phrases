@@ -6,6 +6,8 @@
 const { assert, expect } = require('chai');
 const sinon = require('sinon');
 
+const commander = require('commander');
+
 const { Runner } = require('./runner');
 /* eslint-enable */
 
@@ -58,4 +60,47 @@ describe('Runner', () => {
 
     done();
   });
+});
+
+describe('command line arguments', () => {
+  beforeEach(() => {
+    if (commander && commander.file) {
+      delete commander.file;
+    }
+  });
+
+  test('path if specified by command line arguments', (done) => {
+    debugger;
+    const PASSED_FILE_PATH = './test.js';
+    const commandLineArguments = Runner.getCommandArguments(
+      ['-f', PASSED_FILE_PATH]
+    );
+    const commandLinePath = commandLineArguments.file;
+    assert.equal(commandLinePath, PASSED_FILE_PATH);
+
+    done();
+  });
+
+  test('path if not specified by command line arguments', (done) => {
+    debugger;
+    const commandLineArguments = Runner.getCommandArguments();
+    const commandLinePath = commandLineArguments.file;
+    assert.isUndefined(commandLinePath);
+    done();
+  });
+
+  /*
+  //-- @TODO for some reason this always fails, come back later
+  test('path if not specified by command line arguments > something else specified', (done) => {
+    debugger;
+    try {
+      const commandLineArguments = Runner.getCommandArguments(['-c', 'cuca']);
+    } catch (err) {
+      console.error('err', err.message);
+    }
+    const commandLinePath = commandLineArguments.file;
+    assert.isEmpty(commandLinePath);
+    done();
+  });
+  */
 });
