@@ -37,6 +37,27 @@ class Runner {
   static loadFileContents(filePath) {
     return fs.readFile(filePath, 'utf-8');
   }
+
+  /**
+   * Finds the list of common phrases within the text document
+   * @param {string} str - the string to look into
+   * @returns {any}
+   */
+  static getCommonPhrases(str) {
+    return str;
+  }
+
+  /**
+   * Convert Phrase Object to array
+   * @param {Object}
+   * @returns {Array}
+   */
+  static getObjectEntries(obj) {
+    if (!obj) {
+      return [];
+    }
+    return Object.entries(obj);
+  }
 }
 
 module.exports = {
