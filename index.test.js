@@ -16,6 +16,13 @@ const HAPPY_BIRTHDAY_PATH = './testAssets/HappyBirthday.txt';
 
 const EXAMPLE_NUMBERED_PHRASES = [-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => [`${num}`, num]);
 
+const EXAMPLE_PHRASE_STR = '{"Happy Birthday":1,"Birthday to":3,'
+  + '"to You\\nHappy":2,"You\\nHappy Birthday":2,"Birthday Dear":1,'
+  + '"Dear name\\nHappy":1,"name\\nHappy Birthday":1,"to You.":1}';
+const EXAMPLE_PHRASES = Runner.getObjectEntries(
+  JSON.parse(EXAMPLE_PHRASE_STR)
+);
+
 // const sandbox = sinon.sandbox.create();
 
 describe('Runner', () => {
@@ -50,18 +57,32 @@ describe('Runner', () => {
   });
 
   test('phrase table returns phrases if phrases are found', (done) => {
-    const EXAMPLE_PHRASE_STR = '{"Happy Birthday":1,"Birthday to":3,'
-      + '"to You\\nHappy":2,"You\\nHappy Birthday":2,"Birthday Dear":1,'
-      + '"Dear name\\nHappy":1,"name\\nHappy Birthday":1,"to You.":1}';
-    const EXAMPLE_PHRASES = Runner.getObjectEntries(
-      JSON.parse(EXAMPLE_PHRASE_STR)
-    );
-
     const phraseTable = Runner.printPhraseTable(EXAMPLE_PHRASES);
 
     assert.isNotEmpty(phraseTable);
 
     // console.log(phraseTable);
+
+    done();
+  });
+
+  test('phrase json returns a valid json', (done) => {
+    const phraseJSON = Runner.printPhraseJSON(EXAMPLE_PHRASES);
+    const phraseObj = JSON.parse(phraseJSON);
+
+    assert.isNotNull(phraseObj);
+    assert.isArray(phraseObj);
+    assert.equal(phraseObj.length, 8);
+    assert.deepEqual(phraseObj[0], ['Happy Birthday', 1]);
+
+    done();
+  });
+
+  test('phrase csv returns expected csv', (done) => {
+    const phraseCSV = Runner.printPhraseCSV(EXAMPLE_PHRASES);
+
+    assert.isNotNull(phraseCSV);
+    assert.isString(phraseCSV);
 
     done();
   });
@@ -203,6 +224,7 @@ describe('Run program', () => {
     delete commander.asc;
     delete commander.desc;
     delete commander.json;
+    delete commander.csv;
   });
 
   test('no path or file sent', (done) => {
@@ -224,6 +246,16 @@ describe('Run program', () => {
     )
       .then((tableStr) => {
         assert.isNotNull(tableStr);
+        done();
+      });
+  });
+
+  test('csv', (done) => {
+    Runner.run(
+      ['-f', './testAssets/HappyBirthday.txt', '--csv']
+    )
+      .then((csvStr) => {
+        assert.isNotNull(csvStr);
         done();
       });
   });

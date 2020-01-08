@@ -10,6 +10,7 @@ const fs = require('fs-extra');
 const commander = require('commander');
 const commonPhrases = require('commonphrases');
 const CliTable = require('cli-table');
+const { convertArrayToCSV } = require('convert-array-to-csv');
 /* eslint-enable */
 
 commander
@@ -19,11 +20,14 @@ commander
   .option('-x, --max <maxCount>', 'phrases occurring <= max will be reported')
   .option('-a, --asc', 'sorts in ascending order')
   .option('-d, --desc', 'sorts in descending order (default)')
-  .option('-j, --json', 'returns results in JSON format');
+  .option('-j, --json', 'returns results in JSON format')
+  .option('-c, --csv', 'returns a result in csv format');
 
 // const DEFAULT_PATH = './testAssets.txt';
 
 const TEST_COMMAND_LINE_ARVG = ['/usr/bin/node', './index.js'];
+
+const CSV_HEADER = ['Phrase', 'Rating'];
 
 class Runner {
   /**
@@ -83,6 +87,8 @@ class Runner {
         let resultStr = '';
         if (args.json) {
           resultStr = Runner.printPhraseJSON(sortedList);
+        } else if (args.csv) {
+          resultStr = Runner.printPhraseCSV(sortedList);
         } else {
           resultStr = Runner.printPhraseTable(sortedList);
         }
@@ -119,7 +125,7 @@ class Runner {
 
   /**
    * Prints the results in JSON format
-   * @param {array} commonPhrases - phrases as json table
+   * @param {array} commonPhrases - phrases as multi-dimensional array
    * @returns {string} - json printout of the results
    */
   static printPhraseJSON(phraseList) {
@@ -131,6 +137,21 @@ class Runner {
   }
 
   /**
+   * Prints the results in a CSV format
+   * @param {array} commonPhrases - phrases as multi-dimensional array
+   * @returns {string} - csv printout of the results
+   */
+  static printPhraseCSV(phraseList) {
+    if (!phraseList) {
+      return '';
+    }
+
+    return convertArrayToCSV(phraseList, {
+      header: CSV_HEADER
+    });
+  }
+
+  /**
    * Determines the contents of a file
    * @param {string} filePath - path to the file
    * @returns {string}}
@@ -139,8 +160,6 @@ class Runner {
     let targetPath = null;
     if (filePath) {
       targetPath = filePath;
-    } else if (commander.file) {
-      targetPath = commander.file;
     } else {
       throw (new Error('-f, --file <path> was not sent'));
     }
