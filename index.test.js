@@ -143,7 +143,7 @@ describe('Runner', () => {
   });
 });
 
-let sandbox = null;
+// let sandbox = null;
 
 describe('command line arguments', () => {
   beforeEach(() => {
