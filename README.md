@@ -1,3 +1,7 @@
+
+[//]: AUTOMATION_GENERATION_LINE
+![Tests](https://img.shields.io/badge/tests-passing-00AA00) ![Coverage](https://img.shields.io/badge/coverage-95-f39f37)
+
 # Overview
 
 Simple project to identify common phrases
