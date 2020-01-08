@@ -12,4 +12,5 @@ Runner.run()
   .catch((err) => {
     // eslint-disable-next-line no-console
     console.error(`an error occurred:${err.message}`);
+    process.exit(-1);
   });

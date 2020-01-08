@@ -21,7 +21,7 @@ commander
   .option('-d, --desc', 'sorts in descending order (default)')
   .option('-j, --json', 'returns results in JSON format');
 
-const DEFAULT_PATH = './data.txt';
+// const DEFAULT_PATH = './testAssets.txt';
 
 const TEST_COMMAND_LINE_ARVG = ['/usr/bin/node', './index.js'];
 
@@ -59,14 +59,15 @@ class Runner {
 
   /**
    * Runs the execution
+   * @param {array} mockArguments - mock arguments sent in process.argv
    * @returns {Promise<string>}
    */
-  static run() {
+  static run(mockArguments) {
     const resultPromise = new Promise((resolve, reject) => {
       try {
-        const args = Runner.getCommandArguments();
+        const args = Runner.getCommandArguments(mockArguments);
 
-        const filePath = args.file || DEFAULT_PATH;
+        const filePath = args.file;
         const fileContents = Runner.loadFileContents(filePath);
 
         let phraseList = Runner.getCommonPhrases(fileContents);
@@ -141,9 +142,9 @@ class Runner {
     } else if (commander.file) {
       targetPath = commander.file;
     } else {
-      targetPath = DEFAULT_PATH;
+      throw (new Error('-f, --file <path> was not sent'));
     }
-    return fs.readFileSync(targetPath, 'utf-8');
+    return fs.readFileSync(targetPath, 'utf-8').toLowerCase();
   }
 
   /**

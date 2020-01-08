@@ -143,8 +143,16 @@ describe('Runner', () => {
   });
 });
 
+let sandbox = null;
+
 describe('command line arguments', () => {
   beforeEach(() => {
+    //-- we should be able to use sinon sandboxes,
+    //-- but sinon sandboxes are coming up with a null exception
+    //-- @TODO: investigage
+    // sandbox = sinon.sandbox.create();
+    //-- TypeError: Cannot read property 'create' of undefined
+
     if (commander && commander.file) {
       delete commander.file;
     }
@@ -189,13 +197,49 @@ describe('command line arguments', () => {
 
 describe('Run program', () => {
   beforeEach(() => {
+    delete commander.file;
+    delete commander.min;
+    delete commander.max;
+    delete commander.asc;
+    delete commander.desc;
+    delete commander.json;
+  });
+
+  test('no path or file sent', (done) => {
+    Runner.run()
+      .then(() => {
+        assert.fail('No path provided, we should get an error');
+        done();
+      })
+      .catch((err) => {
+        // console.log('expected an error');
+        assert.isNotNull(err, 'We wanted an error, we got an error');
+        done();
+      });
   });
 
   test('table', (done) => {
-    done();
+    Runner.run(
+      ['-f', './testAssets/HappyBirthday.txt']
+    )
+      .then(tableStr => {
+        assert.isNotNull(tableStr);
+        done();
+      });
   });
 
   test('json', (done) => {
-    done();
+    Runner.run(
+      ['-f', './testAssets/HappyBirthday.txt', '--json']
+    )
+      .then(tableStr => {
+        const tableJSON = JSON.parse(tableStr);
+        assert.isNotNull(tableJSON);
+        done();
+      })
+      .catch(err => {
+        assert.equal(false, true, `error:${err.message}`);
+        done();
+      });
   });
 });
