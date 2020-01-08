@@ -222,7 +222,7 @@ describe('Run program', () => {
     Runner.run(
       ['-f', './testAssets/HappyBirthday.txt']
     )
-      .then(tableStr => {
+      .then((tableStr) => {
         assert.isNotNull(tableStr);
         done();
       });
@@ -232,12 +232,12 @@ describe('Run program', () => {
     Runner.run(
       ['-f', './testAssets/HappyBirthday.txt', '--json']
     )
-      .then(tableStr => {
+      .then((tableStr) => {
         const tableJSON = JSON.parse(tableStr);
         assert.isNotNull(tableJSON);
         done();
       })
-      .catch(err => {
+      .catch((err) => {
         assert.equal(false, true, `error:${err.message}`);
         done();
       });
